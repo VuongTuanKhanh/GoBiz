@@ -1,0 +1,32 @@
+select
+    * 
+from
+    (
+        select distinct
+            cast(cat1.id as string) id_category_1, 
+            cast(cat2.id as string) id_category_2, a.image ImageUrl,
+            case 
+                when regexp_replace(sold, 'Đã bán','') like '%k%' then cast(regexp_replace(sold, 'k|,|Đã bán','') as int)*100
+                when regexp_replace(sold, 'Đã bán','') like '%tr%' then cast(regexp_replace(sold,'tr|,|Đã bán','') as int)*100000
+                when sold = '' then 0
+                else cast(regexp_replace(sold, 'Đã bán','') as int) 
+            end da_ban,
+            row_number() over
+                (
+                    partition by 
+                        cast(cat1.id as string),
+                        cast(cat2.id as string)
+                    order by 
+                        case 
+                            when regexp_replace(sold, 'Đã bán','') like '%k%' then cast(regexp_replace(sold, 'k|,|Đã bán','') as int)*100
+                            when regexp_replace(sold, 'Đã bán','') like '%tr%' then cast(regexp_replace(sold,'tr|,|Đã bán','') as int)*100000
+                            when sold = '' then 0
+                            else cast(regexp_replace(sold, 'Đã bán','') as int)  end desc) rn
+        from 
+            `image_crawl.shopee` a
+            left join `image_crawl.dim_shopee` b on a.category = b.url
+            left join `image_crawl.shopee_category1` cat1 on b.category_1  = cat1.category_1
+            left join `image_crawl.shopee_category2` cat2 on b.category_2  = cat2.category_2 and cat1.id = cat2.id_category1
+    )
+where 
+    da_ban > 100          
