@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<title>Manual Data Management</title>
+{% endblock %}
+
+
+{% block body %}
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <div class="card">
+                <div class="card-body">
+                    <div class="app-brand justify-content-center">
+                        <img src='{{ url_for("static", filename="img/favicon/images.png")}}' alt=""
+                            style="max-width: 25%; margin-bottom: 20px; margin-top: 20px;">
+                    </div>
+                    <h4 class="mb-2">Adventure starts here 🚀</h4>
+                    <p class="mb-4">Make your app management easy and fun!</p>
+
+
+                    <div id="formAuthentication" class="mb-3">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="Enter your username" autofocus />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email"
+                                placeholder="Enter your email" />
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" for="password">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password"
+                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms-conditions"
+                                    name="terms" />
+                                <label class="form-check-label" for="terms-conditions">
+                                    I agree to
+                                    <a href="javascript:void(0);">privacy policy & terms</a>
+                                </label>
+                            </div>
+                        </div>
+                        <button id="sub_btn" class="btn btn-primary d-grid w-100">Sign up</button>
+                    </div>
+
+                    <p class="text-center">
+                        <span>Already have an account?</span>
+                        <a href="{{url_for('login_page')}}">
+                            <span>Sign in instead</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.2/firebase-app.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAAu9LLAhszn64u9QD5EcRZcJwt6v1HLUI",
+        authDomain: "manual-data-management-tool.firebaseapp.com",
+        databaseURL: "https://manual-data-management-tool-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "manual-data-management-tool",
+        storageBucket: "manual-data-management-tool.appspot.com",
+        messagingSenderId: "862288533353",
+        appId: "1:862288533353:web:a8db40efe5c13198bd8ff8"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import { getDatabase, ref, set, child, get }
+        from "https://www.gstatic.com/firebasejs/9.9.2/firebase-database.js";
+
+    const db = getDatabase(app);
+
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const submit = document.getElementById("sub_btn");
+
+
+    function validation() {
+        let name_regex = /^[a-zA-Z0-9]+$/;
+        let email_regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+
+        if (!name_regex.test(username.value)) {
+            alert("Username must contain only alphanumeric characters");
+            username.focus();
+            return false;
+        } else if (!email_regex.test(email.value)) {
+            alert("Email must be in the format")
+        }
+        else if (!password_regex.test(password.value)) {
+            alert("Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter and one number");
+            password.focus();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    function RegisterUser() {
+        if (!validation()) {
+            return;
+        };
+        const dbRef = ref(db);
+        get(child(dbRef, "users/" + username.value)).then((snapshot) => {
+            if (snapshot.exists()) {
+                alert("Username already exists");
+            }
+            else {
+                set(child(dbRef, "users/" + username.value), {
+                    username: username.value,
+                    email: email.value,
+                    password: encrypt_password(password)
+                }).then(() => {
+                    alert("User registered successfully");
+                    window.location.pathname = '/homepage'
+                }).catch((error) => {
+                    alert(error);
+                });
+            }
+        });
+    }
+
+    function encrypt_password() {
+        var pass12 = CryptoJS.AES.encrypt(password.value, password.value)
+        return pass12.toString()
+    }
+
+    submit.addEventListener("click", RegisterUser);
+</script>
+{% endblock %}

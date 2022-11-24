@@ -1,1 +1,0 @@
-select  * from  `image_crawl.shopee_category1` cat1

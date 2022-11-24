@@ -1,0 +1,131 @@
+{
+    "google_cloud_cost": {
+        "ccghcghcgh": {
+            "John": "INTEGER",
+            "Doe": "INTEGER",
+            "vghvghv": "INTEGER",
+            "Riverside": "INTEGER",
+            "NJ": "INTEGER",
+            "xgfxgxg": "INTEGER",
+            "__index_level_0__": "INTEGER"
+        },
+        "gcp_billing_export_resource_v1_018432_45971B_0FD6B5": {
+            "billing_account_id": "STRING",
+            "service": "RECORD",
+            "sku": "RECORD",
+            "usage_start_time": "TIMESTAMP",
+            "usage_end_time": "TIMESTAMP",
+            "project": "RECORD",
+            "labels": "RECORD",
+            "system_labels": "RECORD",
+            "location": "RECORD",
+            "resource": "RECORD",
+            "export_time": "TIMESTAMP",
+            "cost": "FLOAT",
+            "currency": "STRING",
+            "currency_conversion_rate": "FLOAT",
+            "usage": "RECORD",
+            "credits": "RECORD",
+            "invoice": "RECORD",
+            "cost_type": "STRING",
+            "adjustment_info": "RECORD",
+            "tags": "RECORD"
+        },
+        "gcp_billing_export_v1_0182FF_13EBF6_0AE3FD": {
+            "billing_account_id": "STRING",
+            "service": "RECORD",
+            "sku": "RECORD",
+            "usage_start_time": "TIMESTAMP",
+            "usage_end_time": "TIMESTAMP",
+            "project": "RECORD",
+            "labels": "RECORD",
+            "system_labels": "RECORD",
+            "location": "RECORD",
+            "export_time": "TIMESTAMP",
+            "cost": "FLOAT",
+            "currency": "STRING",
+            "currency_conversion_rate": "FLOAT",
+            "usage": "RECORD",
+            "credits": "RECORD",
+            "invoice": "RECORD",
+            "cost_type": "STRING",
+            "adjustment_info": "RECORD",
+            "tags": "RECORD"
+        },
+        "khanh": {
+            "John": "INTEGER",
+            "Doe": "INTEGER",
+            "oijoefferson": "INTEGER",
+            "Riverside": "INTEGER",
+            "NJ": "INTEGER",
+            "cghgcghcghcghcgh": "INTEGER",
+            "__index_level_0__": "INTEGER"
+        },
+        "gcp_billing_export_v1_018432_45971B_0FD6B5": {
+            "billing_account_id": "STRING",
+            "service": "RECORD",
+            "sku": "RECORD",
+            "usage_start_time": "TIMESTAMP",
+            "usage_end_time": "TIMESTAMP",
+            "project": "RECORD",
+            "labels": "RECORD",
+            "system_labels": "RECORD",
+            "location": "RECORD",
+            "export_time": "TIMESTAMP",
+            "cost": "FLOAT",
+            "currency": "STRING",
+            "currency_conversion_rate": "FLOAT",
+            "usage": "RECORD",
+            "credits": "RECORD",
+            "invoice": "RECORD",
+            "cost_type": "STRING",
+            "adjustment_info": "RECORD",
+            "tags": "RECORD"
+        }
+    },
+    "Kscldv_ManualData": {
+        "test_full1": {
+            "agency": "STRING",
+            "ma_don": "STRING",
+            "number_commits": "INTEGER",
+            "phi_dich_vu": "FLOAT",
+            "time_upload": "TIMESTAMP",
+            "tong_tien": "INTEGER"
+        },
+        "table_information": {
+            "table_name": "STRING",
+            "table_type": "STRING",
+            "gbq_table_type": "STRING",
+            "merger_key": "STRING",
+            "created_at": "STRING",
+            "vyjvjvjhvjhvhjvjhvhjvjhvjvjvhjv": "TIME"
+        },
+        "test_full_1": {
+            "agency": "STRING",
+            "code": "STRING",
+            "customer": "STRING",
+            "number_commits": "INTEGER",
+            "phi_van_chuyen": "FLOAT",
+            "tien_hang": "INTEGER",
+            "time_upload": "TIMESTAMP"
+        },
+        "test_full_3": {
+            "agency": "STRING",
+            "code": "STRING",
+            "customer": "STRING",
+            "number_commits": "INTEGER",
+            "phi_van_chuyen": "FLOAT",
+            "tien_hang": "INTEGER",
+            "time_upload": "TIMESTAMP"
+        },
+        "test_full_2": {
+            "agency": "STRING",
+            "code": "STRING",
+            "customer": "STRING",
+            "number_commits": "INTEGER",
+            "phi_van_chuyen": "INTEGER",
+            "tien_hang": "INTEGER",
+            "time_upload": "TIMESTAMP"
+        }
+    }
+}

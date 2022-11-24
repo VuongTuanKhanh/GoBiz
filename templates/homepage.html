@@ -1,0 +1,527 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Homepage</title>
+<style>
+    a {
+        text-decoration: none !important;
+    }
+
+    .button-item {
+        display: inline-block;
+        background-color: transparent;
+        border: 0px;
+        margin-right: 0px !important;
+        padding-left: 0px !important;
+        margin-left: 0px;
+    }
+
+    .button-item:hover {
+        background-color: transparent !important;
+    }
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+{% if user is not none %}
+<form method="post" class="layout-wrapper layout-content-navbar">
+    <div class=" layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+                <div class="app-brand demo">
+                    <a href="#" class="app-brand-link">
+                        <img src='{{ url_for("static", filename="img/favicon/images.png") }}' alt=""
+                            style="max-width: 40%; margin-left: auto; margin-right: auto;">
+                    </a>
+
+                    <a href="#;" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                    </a>
+                </div>
+
+                <ul class="menu-inner py-1">
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">SCHEMA</span>
+                    </li>
+                    {% for schema in schemas %}
+                    <li class="menu-item {{ 
+                        'active' if schema==state.get('schema')}}">
+                        <a class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-layout" style="padding-right: 30px;"></i>
+                            <div data-i18n="Layouts">{{ schema }}</div>
+                        </a>
+                        <table class="menu-sub" style="list-style-type: none; margin-left: 40px;">
+                            {% for table in schemas.get(schema) %}
+                            <tr style="margin-left: 40px; border-left: 2px solid rgb(219, 219, 219);">
+                                <td>
+                                    <button type="submit" class="menu-item menu-link button-item {{schema}}"
+                                        title="{{ table }}" name="choose_table" value="{{ schema }}.{{ table }}">
+                                        {{ table|truncate(20) }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="submit" class="btn p-0 dropdown-toggle hide-arrow"
+                                            data-bs-toggle="dropdown" name="choose_table"
+                                            value="{{ schema }}.{{ table }}">
+                                            <i class="bx bx-dots-vertical-rounded" style="margin-right: 0px;"></i>
+                                        </button>
+                                        <div class="dropdown-menu" style="z-index: 1000;">
+                                            <button class="dropdown-item" type="submit" name="download_csv"><i
+                                                    class=" bx bx-columns me-1"></i>
+                                                Download CSV file</button>
+                                            <button class="dropdown-item" type="submit" name="download_json"
+                                                class=" bx bx-columns me-1"><i class=" bx bx-download me-1"></i>
+                                                Download JSON file</button>
+                                            <button class="dropdown-item" type="submit" name="delete_table"
+                                                value="{{ schema }}.{{ table }}" class=" bx bx-columns me-1"><i
+                                                    class=" bx bx-trash me-1"></i>
+                                                Delete</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr style="border-left: 2px solid rgb(219, 219, 219);">
+                                <td>
+                                    <button class="menu-item menu-link button-item" type="button"
+                                        data-bs-toggle="offcanvas" data-bs-target="#{{schema}}_popup"
+                                        aria-controls="offcanvasBackdrop">
+                                        New Table
+                                    </button>
+                                    <div class="offcanvas offcanvas-end" tabindex="-1" id="{{schema}}_popup"
+                                        aria-labelledby="offcanvasBackdropLabel">
+                                        <div class="offcanvas-header">
+                                            <h5 id="offcanvasBackdropLabel" class="offcanvas-title">CREATE NEW TABLE
+                                            </h5>
+                                            {{schema}}
+                                            <button type="button" class="btn-close text-reset"
+                                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body mx-0 flex-grow-0">
+                                            <div class="card" style="margin-bottom: 250px;">
+                                                <h5 class="card-header">Custom file input</h5>
+                                                <div class="input-group card-body demo-vertical-spacing demo-only-element"
+                                                    style="padding-left: 10px; padding-top: 0px;">
+                                                    <input type="text" class="form-control" placeholder="Table name"
+                                                        id="table_name_{{ loop.index }}" name="new_table_name" />
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        name='table_name_{{ loop.index }}' domain="{{ schema }}"
+                                                        onclick="checkName(this.name, this.getAttribute('domain'))">Check</button>
+                                                </div>
+                                                <div class="card-body demo-only-element"
+                                                    style="padding-left: 10px; padding-top: 0px;">
+                                                    <div class="input-group">
+                                                        <input type="file" class="form-control" name="new_file"
+                                                            aria-label="Upload"
+                                                            onchange="document.getElementById('uploaded_file').disabled = false">
+                                                        <button class="btn btn-outline-primary" name="uploaded_file"
+                                                            value="{{schema}}" id="uploaded_file" type="submit"
+                                                            disabled>Submit</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button"
+                                                class="btn btn-primary mb-2 d-grid w-100">Continue</button>
+                                            <button type="button" class="btn btn-outline-secondary d-grid w-100"
+                                                data-bs-dismiss="offcanvas">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </aside>
+
+
+
+            <div class="layout-page">
+                <nav class="navbar navbar-example navbar-expand-lg bg-light"
+                    style="background-color: rgb(245,245,249) !important;">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">Manual Data Management</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbar-ex-3">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbar-ex-3">
+                            <div class="navbar-nav me-auto">
+                                <a class="nav-item nav-link active" href="#">Home</a>
+                                <a class="nav-item nav-link" href="#">About</a>
+                                <a class="nav-item nav-link" href="#">Contact</a>
+                            </div>
+
+                            <form onsubmit="return false">
+                                <button class="btn btn-outline-primary" type="button">Buy Now</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+                <div class="row">
+                    <div class="col-12"
+                        style="background-color: rgb(245,245,249); padding-left: 30px; padding-right: 30px;">
+                        <div class="card mb-4">
+                            <div class="card-body" style="padding-top: 0px;">
+                                <div class="demo-inline-spacing" style="float: right;">
+                                    <button type="submit" name="change_view" value="table" class="btn btn-primary"
+                                        style="min-width: 100px;">Table</button>
+                                    <button type="submit" name="change_view" value="table" class="btn btn-secondary"
+                                        style="min-width: 100px;">Sample</button>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                        style="min-width: 100px;" data-bs-target="#modalCenter">
+                                        Define
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalCenterTitle">Schema
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        style="margin: -5px;" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col mb-3">
+                                                            <label for="nameWithTitle" class="form-label">Table
+                                                                Name</label>
+                                                            <input type="text" id="nameWithTitle" class="form-control"
+                                                                placeholder="Enter Name" name="new_define_table"/>
+                                                            <input type="text" name="final_schema" id="final_schema"
+                                                                hidden>
+                                                        </div>
+                                                    </div>
+                                                    <table id="schema-table" style="width: 100%; margin-bottom: 10px;">
+                                                        <tr>
+                                                            <td>
+                                                                <label class="form-label"
+                                                                    style="text-align: center; display: block;">Column</label>
+                                                            </td>
+                                                            <td>
+                                                                <label class="form-label"
+                                                                    style="text-align: center; display: block;">Type</label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control new_column_data"
+                                                                    id="user_define_column_0" placeholder="Column Name"
+                                                                    data_type="INT" />
+                                                            </td>
+                                                            <td>
+                                                                <div class="btn-group form-control">
+                                                                    <button type="button" class="dropdown-toggle"
+                                                                        style="width: 100%; background-color: transparent; border: 0px;"
+                                                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                                                        id="user_define_type_0">
+                                                                        INT
+                                                                    </button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li><a class="dropdown-item" name="0"
+                                                                                onclick="update_info(this.name, 'INT')">INT</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item" name="0"
+                                                                                onclick="update_info(this.name, 'STRING')">STRING</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item" name="0"
+                                                                                onclick="update_info(this.name, 'FLOAT')">FLOAT</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item" name="0"
+                                                                                onclick="update_info(this.name, 'RECORD')">RECORD</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item" name="0"
+                                                                                onclick="update_info(this.name, 'TIMESTAMP')">TIMESTAMP</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <center>
+                                                        <div class="btn btn-primary btn-lg"
+                                                            style="width: 100%; padding: 5px;" onclick="add_row()"><span
+                                                                class="bx bx-plus"></span>
+                                                        </div>
+                                                    </center>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" name="define_new_shema"
+                                                        class="btn btn-primary"
+                                                        onmouseover="update_defined_schema()">Save
+                                                        changes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-4" style="margin-top: 25px; margin-bottom: 25px;">
+                            <h5 class="card-header">Add new column</h5>
+                            <div class="card-body">
+                                <div class="row gx-3 gy-2 align-items-center">
+                                    <div class="col-md-3" style="margin-top: 13px;">
+                                        <label class="form-label" for="new_column_name">COLUMN NAME</label>
+                                        <input type="text" id="new_column_name" placeholder="Define new column"
+                                            name="new_column" class="form-control">
+                                    </div>
+                                    <div class="col-md-3" style="margin-top: 13px;">
+                                        <label class="form-label" for="selectPlacement">DATA TYPE</label>
+                                        <select class="form-select placement-dropdown" id="selectPlacement"
+                                            name="new_type">
+                                            <option value="ARRAY">INT</option>
+                                            <option value="BIGNUMERIC">STRING</option>
+                                            <option value="BOOL">FLOAT</option>
+                                            <option value="BYTES">TIMESTAMP</option>
+                                            <option value="DATE">RECORD</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3" style="margin-top: 13px;">
+                                        <label class="form-label" for="showToastPlacement">&nbsp;</label>
+                                        <button id="showToastPlacement" class="btn btn-primary d-block"
+                                            name="add_new_column" type="submit" style="width: 100px;">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5 class="card-header"
+                                style="background-color: rgb(231,231,255); color: rgb(105,108,255);">{{
+                                state.get('table') }}
+                            </h5>
+
+                            <div class="table-responsive text-nowrap">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Column</th>
+                                            <th>Type</th>
+                                            <th style="text-align: center;">New Value</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for column, type in
+                                        schemas.get(state.get('schema')).get(state.get('table')).items() %}
+                                        <tr>
+                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                                <strong>{{ column }}</strong>
+                                            </td>
+                                            <td><span class="{{ 
+                                                    'bg-label-primary me-1' if type=='INTEGER' else 
+                                                    'bg-label-success me-1' if type=='STRING' else 
+                                                    'bg-label-info me-1' if type=='RECORD' else 
+                                                    'bg-label-warning me-1' if type=='TIMESTAMP' else 
+                                                    'bg-label-secondary me-1' if type=='FLOAT' else 
+                                                    'bg-label-dark me-1'
+                                                }} badge">{{ type|lower }}</span></td>
+                                            <td>
+                                                <center>
+                                                    <input type="text" class="form-control" name="{{ column }}"
+                                                        style="width: 70%;">
+                                                </center>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot class="table-border-bottom-0">
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>
+                                                <center>
+                                                    <button type="submit" name="cancel" class="btn btn-secondary"
+                                                        style="min-width: 100px;">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary" name="append"
+                                                        style="min-width: 100px;">Append</button>
+                                                </center>
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- / Layout page -->
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+</form>
+
+<section id="basic-footer">
+    <footer class="footer bg-light">
+        <div
+            class="container-fluid d-flex flex-md-row flex-column justify-content-between align-items-md-center gap-1 container-p-x py-3">
+            <div>
+                <a href="#" target="_blank" class="footer-text fw-bolder">GoBiz</a>
+                ©
+            </div>
+            <div>
+                <a href="#" class="footer-link me-4" target="_blank">License</a>
+                <a href="#" class="footer-link me-4">Help</a>
+                <a href="#" class="footer-link me-4">Contact</a>
+                <a href="#" class="footer-link">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </footer>
+</section>
+
+<div class="bs-toast toast toast-placement-ex m-2" role="alert" aria-live="assertive" aria-atomic="true"
+    data-delay="2000">
+    <div class="toast-header" style="background-color: transparent;">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-semibold">Warning</div>
+        <button type="button" style=" position: initial !important; margin-top: 5px!important;
+            margin-right: 1px;" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" style="padding: 20px;"></div>
+</div>
+{% endif %}
+
+<script>
+    const toastPlacementExample = document.querySelector('.toast-placement-ex')
+
+    let exisiting_table = []
+    let selectedtype = ''
+    for (i of document.querySelectorAll('ul#list_table li.dropdown-item')) {
+        exisiting_table.push(i.textContent.trim())
+    }
+
+    function toastDispose(toast, type) {
+        if (toast && toast._element !== null) {
+            if (toastPlacementExample) {
+                toastPlacementExample.classList.remove(type);
+                DOMTokenList.prototype.remove.apply(toastPlacementExample.classList, ['top-0', 'end-0']);
+            }
+            toast.dispose();
+        }
+    }
+
+    function popup(type, message) {
+        if (selectedtype != '') {
+            toastPlacementExample.classList.remove(selectedtype);
+        }
+        selectedtype = type;
+        document.getElementsByClassName('toast-body')[0].textContent = message
+        toastPlacementExample.classList.add(type);
+        DOMTokenList.prototype.add.apply(toastPlacementExample.classList, ['top-0', 'end-0']);
+        toastPlacement = new bootstrap.Toast(toastPlacementExample);
+        toastPlacement.show();
+    }
+
+    function checkName(id, domain) {
+        let name = document.getElementById(id).value.trim();
+        exisiting_table = document.getElementsByClassName(domain)
+        if (name == '') {
+            popup('bg-warning', "You haven't provide any name")
+            return;
+        }
+
+        for (el of exisiting_table) {
+            if (el.textContent.trim() == name) {
+                popup('bg-dark', "Please choose another name, this name has already been used")
+                return;
+            }
+        }
+        popup('bg-success', "Hurray !!! We can use this name")
+    }
+
+    function toggleButton(ref, bttnID) {
+        let column_names = document.getElementsByClassName('column_name')
+        let new_column_name = document.getElementById('new_column_name')
+        for (let i = 0; i < column_names.length; i++) {
+            if (new_column_name.value.trim() == column_names[i].value.trim()) {
+                popup('bg-warning', 'This name is being used')
+                document.getElementById(bttnID).disabled = true
+                return;
+            }
+        }
+        document.getElementById(bttnID).disabled = ((ref.value !== ref.defaultValue) ? false : true);
+    }
+    var count = 0;
+    function add_row() {
+        for (let i of document.getElementsByClassName('new_column_name')) {
+            if (i.value.trim() == '') {
+                popup('bg-warning', 'You must provide a column name')
+                return;
+            }
+        }
+
+        count += 1
+
+        let table = document.getElementById('schema-table')
+        let newRow = table.insertRow(table.rows.length);
+        newRow.innerHTML = `
+        <tr>
+            <td>
+                <input type="text" class="form-control new_column_data" id="user_define_column_` + count + `" placeholder="Column Name"
+                    data_type="INT" />
+            </td>
+            <td>
+                <div class="btn-group form-control">
+                    <button type="button" class="dropdown-toggle"
+                        style="width: 100%; background-color: transparent; border: 0px;" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="user_define_type_` + count + `">
+                        INT
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" name="` + count + `" onclick="update_info(this.name, 'INT')">INT</a>
+                        </li>
+                        <li><a class="dropdown-item" name="` + count + `" onclick="update_info(this.name, 'STRING')">STRING</a>
+                        </li>
+                        <li><a class="dropdown-item" name="` + count + `" onclick="update_info(this.name, 'FLOAT')">FLOAT</a>
+                        </li>
+                        <li><a class="dropdown-item" name="` + count + `" onclick="update_info(this.name, 'RECORD')">RECORD</a>
+                        </li>
+                        <li><a class="dropdown-item" name="` + count + `" onclick="update_info(this.name, 'TIMESTAMP')">TIMESTAMP</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        `
+    }
+
+    function update_info(id, new_value) {
+        document.getElementById('user_define_type_' + id).textContent = new_value
+        document.getElementById('user_define_column_' + id).setAttribute('data_type', new_value)
+    }
+
+    function update_defined_schema() {
+        let data = {}
+        for (col of document.getElementsByClassName('new_column_data')) {
+            name = col.value
+            type = col.getAttribute('data_type')
+            data[name] = type
+        }
+        document.getElementById('final_schema').value = JSON.stringify(data)
+    }
+</script>
+{% endblock %}
